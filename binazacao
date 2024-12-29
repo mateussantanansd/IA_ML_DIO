@@ -1,0 +1,40 @@
+Código para binazização de imagens
+#----------------------------------------------------------------------------------------
+!pip install pillow
+
+from PIL import Image
+
+imagem = Image.open("lena5.jpg")
+largura, altura = imagem.size
+imagem_cinza = Image.new("L", (largura, altura))  
+
+#Função para converter uma imagem colorida em escala de cinza
+def converter_para_cinza(imagem):
+  for a in range(altura):
+      for l in range(largura):
+          r, g, b = imagem.getpixel((l, a))
+          valor_cinza = int(0.299 * r + 0.587 * g + 0.114 * b)
+          imagem_cinza.putpixel((l, a), valor_cinza)
+
+  return imagem_cinza
+
+#Função para converter uma imagem em escala de cinza para preto e branco
+def converter_preto_branco(imagem_cinza, limiar=128):
+  largura, altura = imagem_cinza.size
+  imagem_binaria = Image.new("1", (largura, altura))  
+
+  for a in range(altura):
+      for l in range(largura):
+          valor_cinza = imagem_cinza.getpixel((l, a))
+          valor_binario = 1 if valor_cinza > limiar else 0
+          imagem_binaria.putpixel((l, a), valor_binario)
+
+  return imagem_binaria
+
+# Uso
+converter_para_cinza(imagem)
+converter_preto_branco(converter_para_cinza(imagem))
+#----------------------------------------------------------------------------------------
+
+Link do COLAB:
+https://colab.research.google.com/drive/1m7DPHXTaUXSuH3bkzoRn5o-FVRUsnpsy?usp=sharing
